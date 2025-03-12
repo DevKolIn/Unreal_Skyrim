@@ -6,6 +6,13 @@
 #include "GameFramework/Character.h"
 #include "SkyrimCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class ECameraMode : uint8
+{
+	TPS,
+	FPS
+};
+
 UCLASS()
 class SKYRIM_API ASkyrimCharacter : public ACharacter
 {
