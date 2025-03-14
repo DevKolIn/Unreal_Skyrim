@@ -141,6 +141,8 @@ void ASkyrimCharacter::Zoom(const FInputActionValue& Value)
 	CurrentZoom = FMath::Clamp(CurrentZoom, MinZoom, MaxZoom);
 	TPSSpringArmComponent->TargetArmLength = CurrentZoom;
 
+	FVector CurrentCameraOffset = FVector(0, CameraOffset.Y * (CurrentZoom / MaxZoom),0);
+	TPSSpringArmComponent->SocketOffset	= CurrentCameraOffset;
 	UpdateCameraMode();
 }
 
