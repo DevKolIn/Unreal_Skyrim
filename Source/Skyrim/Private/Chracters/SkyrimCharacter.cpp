@@ -45,7 +45,8 @@ ASkyrimCharacter::ASkyrimCharacter()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-
+	GetCharacterMovement()->RotationRate = FRotator(0, 240, 0);
+	
 	/* Init Sensitivity (마우스 감도 설정) */
 	MouseSensitivityX = 0.7f;
 	MouseSensitivityY = 0.7f;
@@ -152,6 +153,7 @@ void ASkyrimCharacter::UpdateCameraMode()
 	{
 		if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 		{
+			bUseControllerRotationYaw = true;
 			PlayerController->SetViewTarget(FPSCamera);
 		}
 		CurrentCameraMode = ECameraMode::FPS;
@@ -160,6 +162,7 @@ void ASkyrimCharacter::UpdateCameraMode()
 	{
 		if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 		{
+			bUseControllerRotationYaw = false;
 			PlayerController->SetViewTarget(TPSCamera);
 		}
 		CurrentCameraMode = ECameraMode::TPS;
