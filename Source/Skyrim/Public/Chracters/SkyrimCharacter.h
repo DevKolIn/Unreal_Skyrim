@@ -34,7 +34,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
 /* Camera (카메라) */
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Camera")
@@ -55,10 +54,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Camera")
 	float FPSCameraDistance;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category="Camera")
+	FVector CameraOffset;
+	
 	AActor* TPSCamera;
-
-	UPROPERTY()
 	AActor* FPSCamera;
 	
 	/* Zoom */
@@ -101,7 +100,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> ZoomAction;
-
 	
 	UFUNCTION()
 	void MoveForward(const FInputActionValue& Value);

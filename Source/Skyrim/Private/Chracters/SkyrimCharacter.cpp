@@ -18,25 +18,27 @@ ASkyrimCharacter::ASkyrimCharacter()
 	
 	/* init Camera (카메라 설정) */
 	CurrentCameraMode = ECameraMode::TPS;
+	CameraOffset = FVector(0, 100, 0);
 	
 	TPSSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("TPSSpringArmComponent"));
 	TPSSpringArmComponent->SetupAttachment(GetRootComponent());
 	TPSSpringArmComponent->TargetArmLength = MaxZoom;
 	TPSSpringArmComponent->bUsePawnControlRotation = true;
+	TPSSpringArmComponent->SocketOffset = CameraOffset;
 	
 	TPSCameraActorComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("TPSCameraActorComponent"));
 	TPSCameraActorComponent->SetChildActorClass(ACharacterCamera::StaticClass());
-	TPSCameraActorComponent->SetupAttachment(TPSSpringArmComponent);
+	TPSCameraActorComponent->SetupAttachment(TPSSpringArmComponent, USpringArmComponent::SocketName);
 	
 	FPSCameraDistance = 100.f;
 	FPSSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("FPSSpringArmComponent"));
 	FPSSpringArmComponent->SetupAttachment(GetRootComponent());
-	FPSSpringArmComponent->TargetArmLength = -FPSCameraDistance;
-	FPSSpringArmComponent->bUsePawnControlRotation = false;
+	FPSSpringArmComponent->TargetArmLength = 0;
+	FPSSpringArmComponent->bUsePawnControlRotation = true;
 	
 	FPSCameraActorComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("FPSCameraActorComponent"));
 	FPSCameraActorComponent->SetChildActorClass(ACharacterCamera::StaticClass());
-	FPSCameraActorComponent->SetupAttachment(FPSSpringArmComponent);
+	FPSCameraActorComponent->SetupAttachment(FPSSpringArmComponent, USpringArmComponent::SocketName);
 	
 	/* Init Character Rotation (캐릭터 회전 설정) */
 	bUseControllerRotationPitch = false;
