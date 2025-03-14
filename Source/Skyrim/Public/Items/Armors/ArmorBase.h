@@ -13,5 +13,17 @@ UCLASS()
 class SKYRIM_API AArmorBase : public AItemBase
 {
 	GENERATED_BODY()
+
+public:
+	AArmorBase();
 	
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	EWeaponType WeaponType;
+	
+	UPROPERTY(EditAnywhere, Category = "Weapon | Stat")
+	float Damage;
 };

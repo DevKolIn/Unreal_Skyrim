@@ -3,3 +3,8 @@
 
 #include "Items/Armors/ArmorBase.h"
 
+AArmorBase::AArmorBase()
+{
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
+	SkeletalMeshComponent->SetupAttachment(GetRootComponent());
+}

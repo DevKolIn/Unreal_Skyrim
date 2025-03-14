@@ -3,3 +3,10 @@
 
 #include "Items/Weapons/WeaponBase.h"
 
+AWeaponBase::AWeaponBase()
+{
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
+	SkeletalMeshComponent->SetupAttachment(GetRootComponent());
+
+	Damage = 1.f;
+}

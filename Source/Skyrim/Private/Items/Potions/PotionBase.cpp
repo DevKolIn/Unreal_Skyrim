@@ -3,3 +3,8 @@
 
 #include "Items/Potions/PotionBase.h"
 
+APotionBase::APotionBase()
+{
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+	StaticMeshComponent->SetupAttachment(GetRootComponent());
+}
