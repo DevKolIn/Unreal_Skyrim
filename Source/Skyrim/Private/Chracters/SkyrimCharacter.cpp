@@ -18,32 +18,38 @@ ASkyrimCharacter::ASkyrimCharacter()
 	
 	/* init Camera (카메라 설정) */
 	CurrentCameraMode = ECameraMode::TPS;
+	CameraOffset = FVector(0, 100, 0);
 	
 	TPSSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("TPSSpringArmComponent"));
 	TPSSpringArmComponent->SetupAttachment(GetRootComponent());
 	TPSSpringArmComponent->TargetArmLength = MaxZoom;
 	TPSSpringArmComponent->bUsePawnControlRotation = true;
+	TPSSpringArmComponent->SocketOffset = CameraOffset;
 	
 	TPSCameraActorComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("TPSCameraActorComponent"));
 	TPSCameraActorComponent->SetChildActorClass(ACharacterCamera::StaticClass());
-	TPSCameraActorComponent->SetupAttachment(TPSSpringArmComponent);
+	TPSCameraActorComponent->SetupAttachment(TPSSpringArmComponent, USpringArmComponent::SocketName);
 	
 	FPSCameraDistance = 100.f;
 	FPSSpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("FPSSpringArmComponent"));
 	FPSSpringArmComponent->SetupAttachment(GetRootComponent());
-	FPSSpringArmComponent->TargetArmLength = -FPSCameraDistance;
-	FPSSpringArmComponent->bUsePawnControlRotation = false;
+	FPSSpringArmComponent->TargetArmLength = 0;
+	FPSSpringArmComponent->bUsePawnControlRotation = true;
 	
 	FPSCameraActorComponent = CreateDefaultSubobject<UChildActorComponent>(TEXT("FPSCameraActorComponent"));
 	FPSCameraActorComponent->SetChildActorClass(ACharacterCamera::StaticClass());
-	FPSCameraActorComponent->SetupAttachment(FPSSpringArmComponent);
+	FPSCameraActorComponent->SetupAttachment(FPSSpringArmComponent, USpringArmComponent::SocketName);
 	
 	/* Init Character Rotation (캐릭터 회전 설정) */
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0, 0, 360);
+	GetCharacterMovement()->RotationRate = FRotator(0, 240, 0);
+	
+	/* Init Sensitivity (마우스 감도 설정) */
+	MouseSensitivityX = 0.7f;
+	MouseSensitivityY = 0.7f;
 }
 
 void ASkyrimCharacter::BeginPlay()
@@ -109,13 +115,13 @@ void ASkyrimCharacter::MoveRight(const FInputActionValue& Value)
 void ASkyrimCharacter::Turn(const FInputActionValue& Value)
 {
 	float MouseX = Value.Get<float>();
-	AddControllerYawInput(MouseX);
+	AddControllerYawInput(MouseX * MouseSensitivityX);
 }
 
 void ASkyrimCharacter::LookUp(const FInputActionValue& Value)
 {
 	float MouseY = Value.Get<float>();
-	AddControllerPitchInput(-MouseY);
+	AddControllerPitchInput(-MouseY * MouseSensitivityY);
 }
 
 void ASkyrimCharacter::StartJump()
@@ -136,6 +142,8 @@ void ASkyrimCharacter::Zoom(const FInputActionValue& Value)
 	CurrentZoom = FMath::Clamp(CurrentZoom, MinZoom, MaxZoom);
 	TPSSpringArmComponent->TargetArmLength = CurrentZoom;
 
+	FVector CurrentCameraOffset = FVector(0, CameraOffset.Y * (CurrentZoom / MaxZoom),0);
+	TPSSpringArmComponent->SocketOffset	= CurrentCameraOffset;
 	UpdateCameraMode();
 }
 
@@ -145,6 +153,7 @@ void ASkyrimCharacter::UpdateCameraMode()
 	{
 		if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 		{
+			bUseControllerRotationYaw = true;
 			PlayerController->SetViewTarget(FPSCamera);
 		}
 		CurrentCameraMode = ECameraMode::FPS;
@@ -153,6 +162,7 @@ void ASkyrimCharacter::UpdateCameraMode()
 	{
 		if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 		{
+			bUseControllerRotationYaw = false;
 			PlayerController->SetViewTarget(TPSCamera);
 		}
 		CurrentCameraMode = ECameraMode::TPS;
