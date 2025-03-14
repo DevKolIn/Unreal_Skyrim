@@ -45,7 +45,10 @@ ASkyrimCharacter::ASkyrimCharacter()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0, 0, 360);
+
+	/* Init Sensitivity (마우스 감도 설정) */
+	MouseSensitivityX = 0.7f;
+	MouseSensitivityY = 0.7f;
 }
 
 void ASkyrimCharacter::BeginPlay()
@@ -111,13 +114,13 @@ void ASkyrimCharacter::MoveRight(const FInputActionValue& Value)
 void ASkyrimCharacter::Turn(const FInputActionValue& Value)
 {
 	float MouseX = Value.Get<float>();
-	AddControllerYawInput(MouseX);
+	AddControllerYawInput(MouseX * MouseSensitivityX);
 }
 
 void ASkyrimCharacter::LookUp(const FInputActionValue& Value)
 {
 	float MouseY = Value.Get<float>();
-	AddControllerPitchInput(-MouseY);
+	AddControllerPitchInput(-MouseY * MouseSensitivityY);
 }
 
 void ASkyrimCharacter::StartJump()

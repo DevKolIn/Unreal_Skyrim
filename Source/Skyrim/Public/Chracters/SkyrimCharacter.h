@@ -121,4 +121,14 @@ protected:
 	
 	UFUNCTION()
 	void Zoom(const FInputActionValue& Value);
+
+/* Sensitivity (감도) */
+protected:
+	// 좌우 회전 감도
+	UPROPERTY(EditAnywhere, Category = "Camera")
+	float MouseSensitivityX;
+
+	// 상하 회전 감도
+	UPROPERTY(EditAnywhere, Category = "Camera")
+	float MouseSensitivityY;  
 };
