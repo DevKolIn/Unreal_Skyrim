@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Items/ItemBase.h"
+#include "Items/ItemEnums.h"
 #include "ArmorBase.generated.h"
 
 /**
@@ -18,11 +19,11 @@ public:
 	AArmorBase();
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Armor")
+	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	EWeaponType WeaponType;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Armor")
+	EArmorType ArmorType;
 	
 	UPROPERTY(EditAnywhere, Category = "Weapon | Stat")
 	float Damage;

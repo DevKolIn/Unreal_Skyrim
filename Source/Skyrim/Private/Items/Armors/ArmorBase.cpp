@@ -1,10 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Items/Armors/ArmorBase.h"
+#include "Items/Data/ItemTag/ItemTags.h"
 
 AArmorBase::AArmorBase()
 {
-	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
-	SkeletalMeshComponent->SetupAttachment(GetRootComponent());
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+	StaticMeshComponent->SetupAttachment(GetRootComponent());
+
+	StaticGameplayTags.AddTag(Tag_Item_Equipable_Armor);
 }

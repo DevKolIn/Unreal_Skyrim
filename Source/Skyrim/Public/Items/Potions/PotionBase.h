@@ -22,6 +22,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Potion")
 	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Potion")
+	virtual void PostInitializeComponents() override;
+
+/* Primary Value */
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Potion | PrimaryValue")
 	EPotionType PotionType;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Potion | PrimaryValue")
+	float Amount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Potion | PrimaryValue")
+	float CurrentCount;
 };

@@ -13,6 +13,7 @@ enum class ECameraMode : uint8
 	FPS
 };
 
+class UUserWidget;
 class UInputMappingContext;
 class UInputAction;
 class USpringArmComponent;
@@ -29,12 +30,14 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 /* Camera (카메라) */
+#pragma region Camera
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Camera")
 	TObjectPtr<USpringArmComponent> TPSSpringArmComponent;
@@ -77,11 +80,17 @@ protected:
 	float ZoomThreshold;
 
 	void UpdateCameraMode();
+#pragma endregion
 	
-/* Input (입력) */
+/* Enhanced Input (입력) */
+#pragma region EnhancedInput
 protected:
+// Common Input
+	void ApplyMappingContext(class UInputMappingContext* Context);
+	
+// Player Input
 	UPROPERTY(EditAnywhere, Category = "Input")
-	TObjectPtr<UInputMappingContext> InputMappingContext;
+	TObjectPtr<UInputMappingContext> PlayerMappingContext;
 	
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveForwardAction;
@@ -100,6 +109,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> ZoomAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> InteractionAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> InventoryAction;
 	
 	UFUNCTION()
 	void MoveForward(const FInputActionValue& Value);
@@ -122,7 +137,16 @@ protected:
 	UFUNCTION()
 	void Zoom(const FInputActionValue& Value);
 
+	UFUNCTION()
+	void ItemInteract();
+
+	UFUNCTION()
+	void ToggleInventory();
+	
+#pragma endregion
+	
 /* Sensitivity (감도) */
+#pragma region Sensitivty
 protected:
 	// 좌우 회전 감도
 	UPROPERTY(EditAnywhere, Category = "Camera")
@@ -130,5 +154,49 @@ protected:
 
 	// 상하 회전 감도
 	UPROPERTY(EditAnywhere, Category = "Camera")
-	float MouseSensitivityY;  
+	float MouseSensitivityY;
+#pragma endregion
+	
+/*  Inventory (인벤토리) */
+#pragma region Inventory
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
+	TObjectPtr<class UInventoryComponent> InventoryComponent;
+
+	UFUNCTION()
+	void HandleAddItem(FName Key, AActor* Item);
+#pragma endregion
+	
+/* Item Interaction (아이템 상호작용) */
+#pragma region ItemInteraction
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction|Item")
+	TObjectPtr<class UBoxComponent> ItemBoxCollisionComponent;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction|Item")
+	TSubclassOf<AActor> RenderTargetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Interaction|Item")
+	TObjectPtr<AActor> RenderTarget;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction|Item")
+	TSubclassOf<UUserWidget> PickupWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Interaction|Item")
+	TObjectPtr<class APickup> PickupActor;
+
+	AActor* ClosestItem;
+
+	UPROPERTY()
+	TSet<AActor*> OverlappingItems;
+	
+	UFUNCTION()
+	void OnOverlapBeginItemBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	UFUNCTION()
+	void OnOverlapEndItemBox(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+	void UpdatePickupWidget();
+#pragma endregion
 };
