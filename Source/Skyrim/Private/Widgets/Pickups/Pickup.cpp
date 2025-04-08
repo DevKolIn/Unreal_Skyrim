@@ -21,6 +21,52 @@ void APickup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdateRotationToPlayer();
+}
+
+void APickup::CreatePickupWidget(const TSubclassOf<UUserWidget> WidgetClass)
+{
+	if (WidgetComponent == nullptr || WidgetClass == nullptr)
+		return;
+	
+	if (UUserWidget* NewPickupWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass))
+	{
+		// 기존의 PickupWidget 삭제
+		if (PickupWidget)
+			PickupWidget->RemoveFromRoot();
+
+		// 새로운 위젯 할당
+		WidgetComponent->SetWidget(NewPickupWidget);
+		PickupWidget = NewPickupWidget;
+		PickupWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void APickup::Activate(const AActor* Target)
+{
+	if (PickupWidget == nullptr)
+		return;
+	
+	if (Target == nullptr)
+		return;
+
+	SetActorLocation(Target->GetActorLocation());
+	UpdateRotationToPlayer();
+	SetActorTickEnabled(true);
+	PickupWidget->SetVisibility(ESlateVisibility::Visible);
+}
+
+void APickup::Deactivate()
+{
+	if (PickupWidget == nullptr)
+		return;
+
+	PickupWidget->SetVisibility(ESlateVisibility::Hidden);
+	SetActorTickEnabled(false);
+}
+
+void APickup::UpdateRotationToPlayer()
+{
 	if (APlayerCameraManager* CameraManager =  UGameplayStatics::GetPlayerCameraManager(this, 0))
 	{
 		FVector ActorLocation = GetActorLocation();

@@ -15,14 +15,22 @@ class SKYRIM_API AWeaponBase : public AItemBase
 	GENERATED_BODY()
 public:
 	AWeaponBase();
-	
+
 protected:
+	virtual void PostInitializeComponents() override;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	TObjectPtr<class UCapsuleComponent> CapsuleComponent;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	EWeaponType WeaponType;
-	
-	UPROPERTY(EditAnywhere, Category = "Weapon | Stat")
+/* Primary Value */
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon | PrimaryValue")
 	float Damage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapon | PrimaryValue")
+	EWeaponType WeaponType;
 };

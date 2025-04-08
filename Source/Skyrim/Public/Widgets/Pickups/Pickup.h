@@ -17,10 +17,21 @@ public:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	void CreatePickupWidget(const TSubclassOf<UUserWidget> WidgetClass);
+	void Activate(const AActor* Target);
+	void Deactivate();
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
 	TObjectPtr<USceneComponent> SceneComponent;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
 	TObjectPtr<class UWidgetComponent> WidgetComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
+	TObjectPtr<UUserWidget> PickupWidget;
+
+private:
+	FORCEINLINE void UpdateRotationToPlayer(); 
 };
