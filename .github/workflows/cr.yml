@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: anc95/ChatGPT-CodeReview@main
-        env:
+      - env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LANGUAGE: Korean
@@ -24,5 +24,5 @@ jobs:
           PROMPT: unrealcodefeedback # example: Please check if there are any confusions or irregularities in the following code diff:
           max_tokens: 10000
           MAX_PATCH_LENGTH: 10000 # if the patch/diff length is large than MAX_PATCH_LENGTH, will be ignored and won't review. By default, with no MAX_PATCH_LENGTH set, there is also no limit for the patch/diff length.
-          INCLUDE_PATTERNS:  /Source/**/*.cpp,/Source/**/*.h,/Source/**/*.cs,*.cpp,*.h,*.cs
-          IGNORE_PATTERNS: *.uasset # glob pattern or regex pattern to ignore files, separated by comm
+          INCLUDE_PATTERNS: "/Source/**/*.cpp,/Source/**/*.h,/Source/**/*.cs,*.cpp,*.h,*.cs"
+          IGNORE_PATTERNS: "*.uasset,*.umap"
